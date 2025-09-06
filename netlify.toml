@@ -1,3 +1,7 @@
+[build]
+  publish = "."
+  functions = "functions"
+  # base = ""  # <- žiadny base! tento riadok vôbec nemať
+
 [functions]
-  directory = "functions"
   node_bundler = "esbuild"

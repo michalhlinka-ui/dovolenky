@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dovolenky – jednoduchá správa</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0ea5e9">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="appbar">
+    <div class="brand">🏝️ Dovolenky</div>
+    <div class="spacer"></div>
+    <button id="installBtn" class="btn ghost" hidden>Inštalovať</button>
+  </header>
+
+  <main class="wrap">
+    <section id="authView" class="card">
+      <h1>Prihlásenie</h1>
+      <p class="muted">Vyberte režim:</p>
+      <div class="tabs">
+        <button class="tab active" data-tab="employee">Zamestnanec</button>
+        <button class="tab" data-tab="admin">Administrátor</button>
+      </div>
+
+      <div id="tab-employee">
+        <label class="field">
+          <span>Prístupový kód</span>
+          <input id="employeeCode" autocomplete="one-time-code" placeholder="Zadajte svoj kód" />
+        </label>
+        <button id="loginEmployee" class="btn primary">Prihlásiť</button>
+      </div>
+
+      <div id="tab-admin" hidden>
+        <label class="field">
+          <span>Admin kód</span>
+          <input id="adminCode" placeholder="Zadajte admin kód" />
+        </label>
+        <button id="loginAdmin" class="btn primary">Prihlásiť</button>
+        <p class="muted small mt">Admin kód je v DB (`config/admin.adminCode`).</p>
+      </div>
+    </section>
+
+    <section id="appView" hidden>
+      <div class="toolbar sticky card">
+        <div class="row">
+          <div class="col">
+            <button id="prevMonth" class="btn ghost">◀</button>
+            <select id="monthSelect"></select>
+            <select id="yearSelect"></select>
+            <button id="nextMonth" class="btn ghost">▶</button>
+          </div>
+          <div class="col right">
+            <span class="chip" id="whoAmI">—</span>
+            <button id="openSettings" class="btn">⚙️</button>
+            <button id="logout" class="btn danger ghost">Odhlásiť</button>
+          </div>
+        </div>
+        <div class="legend">
+          <span class="dot bg-pending"></span> Nahlásené
+          <span class="dot bg-approved"></span> Schválené
+          <span class="dot bg-mine"></span> Moje označené (len admin)
+        </div>
+      </div>
+
+      <div class="grid">
+        <aside class="card panel" id="sidePanel">
+          <h2>Prehľad</h2>
+          <div id="summary"></div>
+          <hr>
+          <div id="adminPanel" hidden>
+            <h3>Administrácia</h3>
+            <div class="row wrap gap">
+              <button id="addUserBtn" class="btn primary">+ Pridať človeka</button>
+              <button id="rolloverBtn" class="btn">Prechod na ďalší rok</button>
+            </div>
+            <div id="usersList" class="mt"></div>
+            <hr>
+            <div class="export-buttons">
+  <button id="exportJson" class="btn">Export JSON</button>
+  <button id="exportCsvYear" class="btn">Export CSV (rok)</button>
+  <button id="exportCsvSummary" class="btn">Export CSV – Sumár (rok)</button>
+  <button id="importJson" class="btn">Import JSON</button>
+  <button id="exportCsvByUser" class="btn">Export CSV – podľa osoby</button>
+</div>
+        </aside>
+
+        <section class="card calendar" id="calendar"></section>
+      </div>
+    </section>
+  </main>
+
+  <template id="userRowTpl">
+    <details class="userRow">
+      <summary><span class="name"></span> <code class="code"></code></summary>
+      <div class="row wrap gap">
+        <label class="field small">
+          <span>Meno</span>
+          <input class="inp-name">
+        </label>
+        <label class="field small">
+          <span>Kód</span>
+          <input class="inp-code">
+        </label>
+        <label class="field small">
+          <span>Stará dovolenka (dni)</span>
+          <input type="number" step="0.5" min="0" class="inp-old">
+        </label>
+        <label class="field small">
+          <span>Nová dovolenka (dni)</span>
+          <input type="number" step="0.5" min="0" class="inp-new">
+        </label>
+        <button class="btn saveUser">Uložiť</button>
+        <button class="btn danger ghost delUser">Zmazať</button>
+      </div>
+    </details>
+  </template>
+
+  <!-- dôležité: moduly a poradie -->
+  <script type="module" src="./firebase.js?v=8"></script>
+  <script type="module" src="./app.js?v=8"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js?v=8');
+      });
+    }
+  </script>
+</body>
+</html>

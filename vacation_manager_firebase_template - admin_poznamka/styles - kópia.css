@@ -1,0 +1,474 @@
+/* Minimal, mobile-first UI */
+:root{
+  --bg: #0b1220;
+  --muted: #94a3b8;
+  --card: #0f172a;
+  --border: #1f2937;
+  --primary: #0ea5e9;
+  --danger: #ef4444;
+  --ok: #22c55e;
+  --pending: #f59e0b;
+  --approved: #22c55e;
+  --mine: #60a5fa;
+  --radius: 16px;
+  --shadow: 0 4px 28px rgba(0,0,0,.25);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  background: linear-gradient(180deg,#070b15,#0b1220 30%);
+  color:#e5e7eb;
+}
+
+.appbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;padding:10px 12px;background:rgba(11,18,32,.65);backdrop-filter: blur(10px);border-bottom:1px solid var(--border)}
+.brand{font-weight:700}
+.spacer{flex:1}
+
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.panel{min-width:260px}
+
+.btn{border:1px solid var(--border);background:#111827;color:#e5e7eb;border-radius:12px;padding:10px 12px;cursor:pointer}
+.btn:hover{filter:brightness(1.1)}
+.btn.primary{background:var(--primary);border-color:#0284c7}
+.btn.danger{background:transparent;border-color:var(--danger);color:#fecaca}
+.btn.ghost{background:transparent}
+
+.field{display:flex;flex-direction:column;gap:8px;margin:8px 0}
+.field > span{font-size:12px;color:var(--muted)}
+.field input, .field select{background:#0b1220;border:1px solid var(--border);color:#e5e7eb;border-radius:10px;padding:10px}
+
+.tabs{display:flex;gap:8px;margin:10px 0}
+.tab{border:1px solid var(--border);background:#0b1220;color:#e5e7eb;border-radius:999px;padding:8px 14px;cursor:pointer}
+.tab.active{background:var(--primary)}
+
+.small{font-size:12px}
+.mt{margin-top:8px}
+.muted{color:var(--muted)}
+.right{margin-left:auto}
+.row{display:flex;align-items:center;gap:8px}
+.col{display:flex;align-items:center;gap:8px}
+.wrap .row.wrap{flex-wrap:wrap}
+.gap{gap:8px}
+
+.chip{border:1px solid var(--border);padding:6px 10px;border-radius:999px;background:#0b1220}
+
+.legend{display:flex;align-items:center;gap:10px;margin-top:8px;color:#cbd5e1}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;border:1px solid #0003;margin-right:4px}
+.bg-pending{background:var(--pending)}
+.bg-approved{background:var(--approved)}
+.bg-mine{background:var(--mine)}
+
+.grid{display:grid;grid-template-columns: 1fr; gap:16px;margin-top:16px}
+@media(min-width:900px){
+  .grid{grid-template-columns: 300px 1fr}
+}
+
+.calendar{display:grid;grid-template-columns: repeat(7, 1fr); gap:8px}
+.cal-header{grid-column:1/-1;display:grid;grid-template-columns: repeat(7, 1fr); gap:8px;margin-bottom:8px}
+.cal-header .cell{font-size:12px;color:#94a3b8;text-align:center}
+
+.cell{
+  min-height:88px;background:#0b1220;border:1px solid var(--border);border-radius:12px;padding:8px;position:relative;
+}
+.cell .date{font-size:12px;color:#94a3b8}
+.cell .badges{position:absolute;bottom:8px;left:8px;display:flex;gap:4px;flex-wrap:wrap}
+.badge{font-size:11px;padding:2px 6px;border-radius:999px}
+.badge.pending{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3)}
+.badge.approved{background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3)}
+.badge.mine{background:rgba(96,165,250,.2);border:1px solid rgba(96,165,250,.35)}
+
+.cell.disabled{opacity:.35}
+.cell.clickable{cursor:pointer}
+.cell.clickable:hover{outline:2px solid #1f2937}
+
+.toolbar.sticky{position:sticky;top:64px;z-index:4}
+
+.userRow{border:1px solid var(--border);border-radius:12px;padding:8px;margin:8px 0;background:#0b1220}
+.userRow summary{cursor:pointer;display:flex;align-items:center;gap:8px}
+.userRow .code{opacity:.7}
+/* Len pre export/import tlačidlá */
+.export-buttons .btn {
+  font-size: 13px;
+  padding: 6px 10px;
+  margin: 3px;
+}
+/* --- kalendár: pevná výška bunky + vnútorný scroll, funguje aj v admine --- */
+.calendar .cell {
+  display: flex;
+  flex-direction: column;
+  height: 140px;          /* pevná výška dňa (uprav podľa seba) */
+}
+
+.calendar .cell .date {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* kontajner s menami (badges) – nech sa rolujú, nie rozťahujú */
+.calendar .cell .badges {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  flex: 1;
+  min-height: 0;          /* kľúčové, aby flex-kontajner dovolil overflow */
+  overflow: auto;         /* scrollbar, keď je veľa ľudí */
+  padding-right: 4px;     /* aby scrollbar neprekrýval text */
+}
+
+/* mierne zmenšené čipy */
+.calendar .badge {
+  font-size: 12px;
+  line-height: 1.1;
+  padding: 2px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* voliteľný tenký scrollbar */
+.calendar .cell .badges::-webkit-scrollbar { width: 6px; }
+.calendar .cell .badges::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.18);
+  border-radius: 6px;
+}
+
+@media (max-width: 600px) {
+  .calendar .cell { height: 120px; }
+}
+/* --- KALENDÁR: pevná bunka + vnútorný scroll (hard fix) --- */
+.calendar .cell {
+  position: relative;
+  height: 140px;            /* nastav výšku dňa podľa seba */
+  padding: 4px 6px;
+  display: block;           /* istota, že sa nebude roztiahovať ďalšími flex pravidlami */
+}
+
+/* číslo dňa hore vľavo */
+.calendar .cell .date {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* čipy s menami – ABSOLÚTNE umiestnené, takže musia scrollovať */
+.calendar .cell .badges {
+  position: absolute;
+  top: 22px;                /* miesto pre číslo dňa */
+  left: 6px;
+  right: 6px;
+  bottom: 6px;              /* spodný okraj */
+  overflow: auto;           /* tu je scroll */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* kompaktnejšie čipy */
+.calendar .badge {
+  font-size: 12px;
+  line-height: 1.1;
+  padding: 2px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* voliteľne tenký scrollbar (Chrome/Safari) */
+.calendar .cell .badges::-webkit-scrollbar { width: 6px; }
+.calendar .cell .badges::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.18);
+  border-radius: 6px;
+}
+
+@media (max-width: 600px) {
+  .calendar .cell { height: 120px; }
+  .calendar .cell .badges { top: 20px; }
+}
+/* --- 1) pevná výška bunky + scroll (ostáva) --- */
+.calendar .cell {
+  position: relative;
+  height: 140px;             /* prípadne 120–160 podľa chuti */
+  padding: 4px 6px;
+  display: block;
+}
+
+/* číslo dňa */
+.calendar .cell .date {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* --- 2) čipy: len podľa obsahu, nie na celú šírku --- */
+.calendar .cell .badges {
+  position: absolute;
+  top: 22px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  overflow: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-content: flex-start;    /* lepšie zalamovanie do riadkov */
+  background: transparent;      /* istota, aby bunka nebola vyliata farbou */
+}
+
+.calendar .badge {
+  display: inline-flex;         /* nie block – nech nie je na 100% šírky */
+  align-items: center;
+  max-width: 100%;
+  font-size: 12px;
+  line-height: 1.1;
+  padding: 2px 6px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* jemný scrollbar */
+.calendar .cell .badges::-webkit-scrollbar { width: 6px; }
+.calendar .cell .badges::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.18);
+  border-radius: 6px;
+}
+
+/* --- 3) menšie medzery medzi týždňami a dňami --- */
+.calendar { gap: 6px; }        /* ak chceš ešte kompaktnejšie, daj 4px */
+
+@media (max-width: 600px) {
+  .calendar .cell { height: 120px; }
+  .calendar { gap: 4px; }
+}
+/* === Kalendár – kompaktnejšie týždne === */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 150px;   /* výška buniek v riadku (môžeš dať 120px, 130px) */
+  gap: 4px 6px;            /* prvá hodnota = medzera medzi riadkami, druhá = medzi stĺpcami */
+}
+/* --- Admin: prehľad Stavy --- */
+#statusList {
+  white-space: nowrap;      /* všetko v jednom riadku, bez zalomenia */
+  overflow-x: auto;         /* horizontálny posuvník ak je riadok dlhý */
+  overflow-y: auto;         /* vertikálny posuvník pri veľa osobách */
+  max-height: 420px;        /* uprav podľa seba */
+  font-size: 14px;
+  line-height: 1.6;
+  padding-right: 6px;       /* aby scrollbar neprekrýval text */
+}
+#statusList > div { margin-bottom: 4px; }
+
+/* voliteľný tenký scrollbar */
+#statusList::-webkit-scrollbar { height: 6px; width: 6px; }
+#statusList::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.18);
+  border-radius: 6px;
+}
+#statusList {
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 420px;
+  font-size: 14px;
+  line-height: 1.6;
+  padding-right: 6px;
+}
+#statusList > div { margin-bottom: 4px; }
+/* Modré admin poznámky (badge.note) */
+.badge.note {
+  background: #2563eb22;          /* jemná modrá */
+  border: 1px solid #3b82f6;      /* modrá linka */
+  color: #93c5fd;                 /* svetlomodrý text */
+  cursor: pointer;
+  position: relative;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hover náhľad (rozbalenie) */
+.badge.note:hover {
+  white-space: normal;
+  max-width: 320px;
+  z-index: 5;
+  box-shadow: 0 6px 20px rgba(0,0,0,.35);
+  transform: translateZ(0); /* pre vykreslenie nad ostatné */
+}
+
+/* ak potrebuješ, aby sa hover neprekrýval s inými badge-mi */
+.calendar .cell .badges {
+  position: relative;
+  overflow: visible; /* umožní rozbalenie nad rámec bunky */
+}
+/* === Fix: pevná výška dňa a vnútorný scroll pre badge-y === */
+.calendar .cell {
+  /* výšku si môžeš doladiť – 160–220px podľa vkusu */
+  height: 180px;               /* fixná výška dňa */
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar .cell .date {
+  flex: 0 0 auto;              /* hlavička dňa má svoju výšku */
+}
+
+.calendar .cell .badges {
+  flex: 1 1 auto;               /* zaberie zvyšok priestoru */
+  min-height: 0;                /* dôležité pre správny overflow vo flex kontajneri */
+  overflow-y: auto;             /* zapne vnútorný scroll */
+  padding-right: 4px;           /* trochu miesta na scrollbar */
+}
+
+/* voliteľné: decentnejší scrollbar (WebKit) */
+.calendar .cell .badges::-webkit-scrollbar { width: 6px; }
+.calendar .cell .badges::-webkit-scrollbar-thumb {
+  background: #2b3344; border-radius: 6px;
+}
+/* --- Pevná výška buniek + vnútorný scroll menoviek --- */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px 10px;                 /* týždeň x deň */
+  grid-auto-rows: minmax(140px, 1fr); /* rovnaká výška všetkých dní */
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 140px;              /* istota aj mimo gridu */
+  overflow: hidden;               /* nič nepretečie mimo rámik */
+}
+
+.cell .date {
+  flex: 0 0 auto;
+}
+
+.cell .badges {
+  flex: 1 1 auto;
+  overflow: auto;                 /* skrol vo vnútri dňa */
+  max-height: 999px;              /* nech to limituje len .cell */
+  padding-right: 4px;             /* miesto na scrollbar */
+  -webkit-overflow-scrolling: touch; /* plynulý scroll na iOS */
+  scrollbar-width: thin;
+}
+
+.badge {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* --- Kompaktnejší layout na úzkych obrazovkách (telefón) --- */
+@media (max-width: 740px) {
+  .calendar { gap: 8px 6px; grid-auto-rows: minmax(130px, 1fr); }
+  .cell { min-height: 130px; }
+  .cell .badges { padding-right: 2px; }
+  .badge { font-size: 12px; padding: 2px 6px; border-radius: 10px; }
+}
+
+/* nech toolbar vždy zostane nad kalendárom */
+.toolbar.sticky { position: sticky; top: 0; z-index: 20; }
+
+/* === Kompaktnejší kalendár: menšie medzery medzi dňami aj vo vnútri bunky === */
+
+/* menšie rozostupy medzi dňami aj týždňami */
+.calendar{
+  gap: 6px 6px;                 /* riadok x stĺpec (predtým si mal väčšie) */
+  grid-auto-rows: minmax(130px,1fr); /* jednotná výška buniek */
+}
+
+/* vo vnútri bunky odstráň “vzduch” hore a medzi prvkami */
+.cell{
+  padding: 6px 6px 4px;         /* menší vnútorný padding */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;                      /* medzera len 4px medzi .date a .badges */
+  justify-content: flex-start;
+  min-height: 130px;
+  overflow: hidden;
+}
+
+/* dátum – bez extra odsadení hore/dole */
+.cell .date{
+  margin: 0;
+  padding: 0;
+  line-height: 1.1;
+}
+
+/* zoznam menoviek – nech začne hneď pod dátumom, bez zbytočných okrajov */
+.cell .badges{
+  margin: 0;
+  padding: 0 2px 0 0;           /* trocha miesta pre scrollbar */
+  flex: 1 1 auto;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ak máš niekde pseudo-element “políčka” v bunke, vypneme ho, lebo robí zbytočný priestor */
+.cell::before,
+.cell::after{ content: none !important; }
+
+/* kompaktnejšie štítky */
+.badge{
+  margin: 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ešte o kúsok tesnejšie na mobile */
+@media (max-width: 740px){
+  .calendar{ gap: 5px 5px; grid-auto-rows: minmax(120px,1fr); }
+  .cell{ min-height: 120px; padding: 5px 5px 3px; gap: 3px; }
+  .badge{ font-size: 12px; padding: 2px 6px; border-radius: 10px; }
+}
+/* ===== Kompaktnejšie medzery v kalendári (hard override) ===== */
+
+/* mriežka dní */
+.calendar { 
+  gap: 6px !important;                 /* medzera medzi dňami */
+}
+
+/* hlavička dní (Po–Ne) */
+.cal-header { 
+  gap: 6px !important; 
+  margin-bottom: 6px !important; 
+}
+.cal-header .cell { 
+  padding: 6px 6px !important; 
+}
+
+/* samotná denná bunka */
+.calendar .cell {
+  padding: 6px 6px 8px !important;     /* vnútorné odsadenie bunky */
+}
+
+/* dátum hore v bunke – zruš prebytočnú medzeru */
+.calendar .cell .date {
+  margin: 0 0 4px !important;          /* iba malá medzera pod dátumom */
+  padding: 0 !important;
+  line-height: 1.2 !important;
+}
+
+/* zoznam „badge-ov“ (mená/poznámky) v bunke */
+.calendar .cell .badges {
+  gap: 4px !important;                 /* zmenši medzeru medzi menami */
+  row-gap: 4px !important;
+}
+
+/* samotný badge – nech nepridáva extra marginy */
+.calendar .cell .badge {
+  margin: 0 !important;
+}
+
+/* ak by v pôvodnom CSS bolo nejaké pseudo, ktoré tvorí šedý pásik dole, vypni ho */
+.calendar .cell .badges::after,
+.calendar .cell::after {
+  content: none !important;
+}
